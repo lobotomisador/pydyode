@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>test htmx</title>
+    <!-- we could include the contents of the CDN directly here to avoid malicious attacks  -->
+    <script defer src="https://unpkg.com/hyperscript.org@0.9.5"></script>
+    <script defer src="https://unpkg.com/htmx.org@1.7.0"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js"></script>
+    <script type="text/javascript">
+      let pydiode
+      async function main(){
+        pyodide = await loadPyodide()
+        await pyodide.loadPackage("numpy")
+        console.log(pyodide.runPython(`
+            import sys
+            import numpy
+            sys.version
+       `))
+        console.log(pyodide.runPython("print(1 + 2)"))
+      }
+      main()
+      const runPython = s => console.log(pyodide.runPython('sum([1,2,5])'))
+      runPython()
+    </script>
+
+    <style>
+      .big-text {
+        font-size: 16rem;
+      }
+    </style>
+
+
+  </head>
+
+  <body>
+  <h1>success</h1>
+  <button hx-post="/clicked" hx-swap="outerHTML">
+    click Me
+  </button>
+  <button _="on click toggle .big-text">
+    Toggle the "big-text" class on me on click
+  </button>
+
+
+  <button onclick="runPython()">run python</button>
+  <input id="code" value="sum([1, 2, 3, 4, 5])" />
+
+  </body>
+</html> 
